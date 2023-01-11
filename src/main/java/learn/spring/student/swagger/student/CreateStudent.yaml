@@ -1,0 +1,55 @@
+post:
+  tags:
+    - Student
+  summary: Create Student.
+  description: Create Student
+  operationId: createStudent
+  requestBody:
+    description: Create info student
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            studentCode:
+              type: string
+            studentName:
+              type: string
+            studentInfoModel:
+              type: object
+              properties:
+                address:
+                  type: string
+                dateOfBirth:
+                  type: string
+                averageScore:
+                  type: number
+          required:
+            - studentCode
+            - studentName
+            - studentInfoModel
+  responses:
+    "200":
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseObject'
+
+
+components:
+  schemas:
+    ResponseObject:
+      type: object
+      properties:
+        status:
+          type: string
+        totalPage:
+          type: integer
+        totalElement:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array

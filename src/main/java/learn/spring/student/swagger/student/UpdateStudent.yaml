@@ -1,0 +1,68 @@
+put:
+  tags:
+    - Student
+  summary: Update Student.
+  description: Update Student!
+  operationId: updateStudent
+  requestBody:
+    description: Update info student!
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            studentId:
+              type: integer
+            studentCode:
+              type: string
+            studentName:
+              type: string
+            studentInfoModel:
+              type: object
+              properties:
+                address:
+                  type: string
+                dateOfBirth:
+                  type: string
+                averageScore:
+                  type: number
+          required:
+            - studentId
+            - studentCode
+  responses:
+    "200":
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseObject'
+
+
+components:
+  schemas:
+    ResponseObject:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            studentId:
+              type: integer
+            studentName:
+              type: string
+            studentCode:
+              type: string
+            studentInfoModel:
+              type: object
+              properties:
+                infoId:
+                  type: integer
+                address:
+                  type: string
+                dateOfBirth:
+                  type: string

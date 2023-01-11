@@ -10,3 +10,9 @@ paths:
     $ref: "./user/CreateUser.yaml"
   /user/login:
     $ref: "./user/Login.yaml"
+  /student/create-student:
+    $ref: "./student/CreateStudent.yaml"
+  /student/update-student:
+    $ref: "./student/UpdateStudent.yaml"
+  /student/get-all-student/page={page}:
+    $ref: "./student/GetAllStudent.yaml"

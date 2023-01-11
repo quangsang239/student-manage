@@ -1,0 +1,37 @@
+get:
+  tags:
+    - Student
+  summary: Get All Student.
+  description: Get All Student!
+  operationId: getAllStudent
+  parameters:
+    - in: path
+      name: page
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    "200":
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseObject'
+
+
+components:
+  schemas:
+    ResponseObject:
+      type: object
+      properties:
+        status:
+          type: string
+        totalPage:
+          type: integer
+        totalElement:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
