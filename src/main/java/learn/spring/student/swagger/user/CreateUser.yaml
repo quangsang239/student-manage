@@ -1,0 +1,43 @@
+post:
+  tags:
+    - User
+  summary: Create User.
+  description: Create user
+  operationId: createUser
+  requestBody:
+    description: Create account user
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+            confirmPassword:
+              type: string
+          required:
+            - username
+            - password
+            - confirmPassword
+  responses:
+    "200":
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseObject'
+
+
+components:
+  schemas:
+    ResponseObject:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+

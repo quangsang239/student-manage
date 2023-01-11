@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.17.xsd">
+
+
+    <changeSet id="1673236389836-1" author="QuangSang">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="user_name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="user_id" constraintName="uc_user_user" tableName="user"/>
+        <addUniqueConstraint columnNames="user_name" constraintName="uc_user_user_name" tableName="user"/>
+        <createTable tableName="student">
+            <column autoIncrement="true" name="student_id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_student"/>
+            </column>
+            <column name="student_name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_code" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="student_id" constraintName="uc_student_student" tableName="student"/>
+        <createTable tableName="student_info_model">
+            <column autoIncrement="true" name="info_id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_student_info_model"/>
+            </column>
+            <column name="student_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="average_score" type="DOUBLE"/>
+            <column name="date_of_birth" type="DATETIME"/>
+        </createTable>
+        <addUniqueConstraint columnNames="student_id" constraintName="uc_student_info_model_student" tableName="student_info_model"/>
+        <addForeignKeyConstraint baseColumnNames="student_id" baseTableName="student_info_model" constraintName="FK_STUDENT_INFO_MODEL_ON_STUDENT" referencedColumnNames="student_id" referencedTableName="student"/>
+    </changeSet>
+</databaseChangeLog>

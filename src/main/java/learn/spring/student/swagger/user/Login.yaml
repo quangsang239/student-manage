@@ -1,0 +1,53 @@
+post:
+  tags:
+    - User
+  summary: Login User.
+  description: Login User
+  operationId: loginUser
+  requestBody:
+    description: Login user
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+          required:
+            - username
+            - password
+            - confirmPassword
+  responses:
+    '200':
+      description: Data is token jwt
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseObject'
+    '400':
+      description: Bad request. User ID must be an integer and larger than 0.
+    '401':
+      description: Authorization information is missing or invalid.
+    '404':
+      description: A user with the specified ID was not found.
+    '5XX':
+      description: Unexpected error.
+
+
+components:
+  schemas:
+    ResponseObject:
+      type: object
+      properties:
+        data:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+
+
+  
