@@ -1,10 +1,9 @@
-package learn.spring.student.model;
+package learn.spring.student.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisterModel {

@@ -1,6 +1,6 @@
-package learn.spring.student.service;
+package learn.spring.student.services;
 
-import learn.spring.student.model.UserModel;
+import learn.spring.student.models.UserModel;
 
 public interface UserService extends Service<UserModel> {
     String login(UserModel user);

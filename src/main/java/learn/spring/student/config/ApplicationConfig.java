@@ -1,6 +1,6 @@
 package learn.spring.student.config;
 
-import learn.spring.student.model.UserModel;
+import learn.spring.student.entities.UserEntity;
 import learn.spring.student.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,10 +20,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserRepository userRepository;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            Optional<UserModel> userModel = userRepository.findByUsername(username);
+            Optional<UserEntity> userModel = userRepository.findByUsername(username);
             if (userModel.isEmpty()) {
                 throw new UsernameNotFoundException("User is not found " + username + " !");
             }

@@ -2,11 +2,10 @@ package learn.spring.student.controller;
 
 import learn.spring.student.common.EntityResponse;
 import learn.spring.student.common.EnumStatusResponse;
-import learn.spring.student.model.UserModel;
-import learn.spring.student.model.UserRegisterModel;
-import learn.spring.student.service.impl.UserServiceImpl;
+import learn.spring.student.models.UserModel;
+import learn.spring.student.models.UserRegisterModel;
+import learn.spring.student.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,23 +16,19 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final
-    UserServiceImpl userServiceImpl;
+    private final UserServiceImpl userServiceImpl;
 
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/get-all-user")
     @ResponseBody
-    public ResponseEntity<EntityResponse<List<UserModel>>> getAllUser() {
-        EntityResponse<List<UserModel>> dataResponse = new EntityResponse<>(EnumStatusResponse.SUCCESS,
-                "Get user successful!",
-                userServiceImpl.findAll());
-        return ResponseEntity.ok(dataResponse);
+    public EntityResponse<List<UserModel>> getAllUser() {
+        return userServiceImpl.findAll();
     }
 
     @GetMapping(value = "/get-user-by-id/{userId}")
     @ResponseBody
-    public UserModel getUserById(@PathVariable("userId") Integer userId) {
+    public EntityResponse<UserModel> getUserById(@PathVariable("userId") Integer userId) {
         return userServiceImpl.findById(userId);
     }
 
@@ -53,9 +48,7 @@ public class UserController {
                             UserModel newUser = new UserModel();
                             newUser.setPassword(passwordEncoder.encode(user.getPassword()));
                             newUser.setUsername(user.getUsername());
-                            userServiceImpl.create(newUser);
-                            return new EntityResponse<>(EnumStatusResponse.SUCCESS, "Create user success!",
-                                    null);
+                            return userServiceImpl.create(newUser);
                         } catch (Exception e) {
                             return new EntityResponse<>(EnumStatusResponse.ERROR, "Server error!", null);
                         }

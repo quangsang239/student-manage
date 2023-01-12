@@ -1,8 +1,7 @@
 package learn.spring.student.repositories;
 
-import learn.spring.student.model.StudentInfoModel;
+import learn.spring.student.entities.StudentInfoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
-public interface StudentInfoRepository extends JpaRepository<StudentInfoModel, Integer> {
+public interface StudentInfoRepository extends JpaRepository<StudentInfoEntity, Integer> {
 }
