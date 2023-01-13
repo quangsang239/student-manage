@@ -1,6 +1,8 @@
 package learn.spring.student.config;
 
+import learn.spring.student.common.EntityMessage;
 import learn.spring.student.entities.UserEntity;
+import learn.spring.student.exception.NotFoundUserException;
 import learn.spring.student.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +28,7 @@ public class ApplicationConfig {
         return username -> {
             Optional<UserEntity> userModel = userRepository.findByUsername(username);
             if (userModel.isEmpty()) {
-                throw new UsernameNotFoundException("User is not found " + username + " !");
+                throw new NotFoundUserException(username + " " + EntityMessage.notFound);
             }
             return userModel.get();
         };
