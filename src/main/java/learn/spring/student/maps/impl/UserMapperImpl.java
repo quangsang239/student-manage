@@ -3,11 +3,9 @@ package learn.spring.student.maps.impl;
 import learn.spring.student.entities.UserEntity;
 import learn.spring.student.maps.UserMapper;
 import learn.spring.student.models.UserModel;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper
 public class UserMapperImpl implements UserMapper {
     @Override
     public UserEntity modelMapToEntity(UserModel model) {

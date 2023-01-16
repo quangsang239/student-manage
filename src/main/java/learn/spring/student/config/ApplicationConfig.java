@@ -1,6 +1,6 @@
 package learn.spring.student.config;
 
-import learn.spring.student.common.EntityMessage;
+import learn.spring.student.constants.EntityMessage;
 import learn.spring.student.entities.UserEntity;
 import learn.spring.student.exception.NotFoundUserException;
 import learn.spring.student.repositories.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -28,7 +27,7 @@ public class ApplicationConfig {
         return username -> {
             Optional<UserEntity> userModel = userRepository.findByUsername(username);
             if (userModel.isEmpty()) {
-                throw new NotFoundUserException(username + " " + EntityMessage.notFound);
+                throw new NotFoundUserException(username + " " + EntityMessage.NOT_FOUND);
             }
             return userModel.get();
         };

@@ -6,13 +6,11 @@ info:
 servers:
   - url: 'http://localhost:8080/api'
 paths:
-  /user/create-user:
+  /users:
     $ref: "./user/CreateUser.yaml"
-  /user/login:
+  /login:
     $ref: "./user/Login.yaml"
-  /student/create-student:
+  /students:
     $ref: "./student/CreateStudent.yaml"
-  /student/update-student:
-    $ref: "./student/UpdateStudent.yaml"
-  /student/get-all-student/page={page}:
+  /students/{page}:
     $ref: "./student/GetAllStudent.yaml"

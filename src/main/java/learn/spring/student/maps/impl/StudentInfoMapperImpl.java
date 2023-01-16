@@ -5,11 +5,9 @@ import learn.spring.student.entities.StudentInfoEntity;
 import learn.spring.student.maps.StudentInfoMapper;
 import learn.spring.student.models.StudentInfoModel;
 import learn.spring.student.models.StudentModel;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper
 public class StudentInfoMapperImpl implements StudentInfoMapper {
     @Override
     public StudentInfoEntity modelMapToEntity(StudentInfoModel model) {

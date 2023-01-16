@@ -3,8 +3,7 @@ package learn.spring.student.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,4 +23,3 @@ public class StudentEntity {
     @OneToOne(mappedBy = "studentEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private StudentInfoEntity studentInfoEntity;
 }
-

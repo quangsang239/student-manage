@@ -19,4 +19,5 @@ public class CustomExceptionHandle {
         return new ExceptionResponse(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
+
 }

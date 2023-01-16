@@ -1,10 +1,10 @@
 package learn.spring.student.services.impl;
 
 import jakarta.transaction.Transactional;
-import learn.spring.student.common.EntityMessage;
+import learn.spring.student.constants.EntityMessage;
 import learn.spring.student.common.EntityPageNumber;
 import learn.spring.student.common.EntityResponse;
-import learn.spring.student.common.EnumStatusResponse;
+import learn.spring.student.constants.EnumStatusResponse;
 import learn.spring.student.entities.StudentEntity;
 import learn.spring.student.entities.StudentInfoEntity;
 import learn.spring.student.maps.impl.StudentInfoMapperImpl;
@@ -34,17 +34,17 @@ public class StudentServiceImpl implements StudentService {
     public EntityResponse<List<StudentModel>> findAll() {
         List<StudentModel> studentModelList =studentRepository.findAll().stream().map(studentMapper::entityMapToModel)
                 .collect(Collectors.toList());
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.getDataSuccess,studentModelList);
+        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,studentModelList);
     }
 
     @Override
     public EntityResponse<StudentModel> findById(Integer id) {
         Optional<StudentEntity> sOptional = studentRepository.findById(id);
         if (sOptional.isPresent()){
-            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.getDataSuccess,
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
                     sOptional.map(studentMapper::entityMapToModel).orElse(null));
         }
-        return new EntityResponse<>(EnumStatusResponse.WARNING, EntityMessage.notFound, null);
+        return new EntityResponse<>(EnumStatusResponse.WARNING, EntityMessage.NOT_FOUND, null);
 
     }
 
@@ -52,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public EntityResponse<StudentModel> create(StudentModel model) {
         if (existStudent(model.getStudentCode())){
-            return new EntityResponse<>(EnumStatusResponse.WARNING,EntityMessage.exist, null);
+            return new EntityResponse<>(EnumStatusResponse.WARNING,EntityMessage.EXIST, null);
         }
         StudentInfoEntity studentInfoModel = studentInfoMapper.modelMapToEntity(model.getStudentInfoModel());
         StudentModel studentModel = new StudentModel();
@@ -60,15 +60,15 @@ public class StudentServiceImpl implements StudentService {
         studentModel.setStudentName(model.getStudentName());
         studentInfoModel.setStudentEntity(studentRepository.save(studentMapper.modelMapToEntity(studentModel)));
         studentInfoRepository.save(studentInfoModel);
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.createSuccess, model);
+        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_SUCCESS, model);
     }
 
     @Override
     @Transactional
     public EntityResponse<StudentModel> delete(Integer id) {
         if (findById(id) != null)
-            return new EntityResponse<>(EnumStatusResponse.SUCCESS,EntityMessage.deleteSuccess, null);
-        return new EntityResponse<>(EnumStatusResponse.WARNING,EntityMessage.notFound, null);
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS,EntityMessage.DELETE_SUCCESS, null);
+        return new EntityResponse<>(EnumStatusResponse.WARNING,EntityMessage.NOT_FOUND, null);
     }
 
     @Override
@@ -105,10 +105,10 @@ public class StudentServiceImpl implements StudentService {
                 newStudentInfoUpdate.setDateOfBirth(model.getStudentInfoModel().getDateOfBirth());
             }
             newStudentUpdate.setStudentInfoEntity(newStudentInfoUpdate);
-            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.updateSuccess,
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.UPDATE_SUCCESS,
                     studentMapper.entityMapToModel(studentRepository.save(newStudentUpdate)));
         }
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.updateFail,
+        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.UPDATE_FAIL,
                 null);
     }
 }
