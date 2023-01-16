@@ -15,9 +15,14 @@ public class CustomExceptionHandle {
 
     @ExceptionHandler(TokenInvalidException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionResponse handleInvalidException(NotFoundUserException ex){
+    public ExceptionResponse handleInvalidException(TokenInvalidException ex){
         return new ExceptionResponse(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
+    @ExceptionHandler(CreateFileException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleCreateFileException(CreateFileException ex){
+        return new ExceptionResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 
 }
