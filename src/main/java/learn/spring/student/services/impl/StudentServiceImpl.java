@@ -15,6 +15,9 @@ import learn.spring.student.repositories.StudentInfoRepository;
 import learn.spring.student.repositories.StudentRepository;
 import learn.spring.student.services.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -32,12 +35,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentInfoMapperImpl studentInfoMapper;
 
     @Override
+    @Cacheable(value = "StudentModel")
     public List<StudentModel> findAll() {
         return studentRepository.findAll().stream().map(studentMapper::entityMapToModel)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Cacheable(value = "StudentModel", key = "#id")
     public StudentModel findById(Integer id) {
         Optional<StudentEntity> sOptional = studentRepository.findById(id);
         if (sOptional.isPresent()) return studentMapper.entityMapToModel(sOptional.get());
@@ -62,6 +67,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "StudentModel", key = "#id", allEntries = true)
     public StudentModel delete(Integer id) {
         if (findById(id) != null) return findById(id);
         else throw new StudentException(EntityMessage.ID_FIND_IS_NULL);
@@ -83,6 +89,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
+    @CachePut(value = "StudentModel", key = "#model.studentId")
     public EntityResponse<StudentModel> updateStudent(StudentModel model) {
         Optional<StudentEntity> studentModel = studentRepository.findById(model.getStudentId());
         if (studentModel.isPresent()){

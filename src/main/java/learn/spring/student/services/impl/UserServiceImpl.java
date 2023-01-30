@@ -49,13 +49,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @CachePut(value = "UserModel", key = "#user.userId")
+    @CachePut(value = "UserModel", key = "#user.username")
     public UserModel create(UserModel user) {
         if (existUser(user.getUsername())) {
             throw new StudentException(EntityMessage.EXIST);
         }
-        userRepository.save(userMapper.modelMapToEntity(user));
-        return user;
+        return userMapper.entityMapToModel(userRepository.save(userMapper.modelMapToEntity(user)));
     }
 
     @Override

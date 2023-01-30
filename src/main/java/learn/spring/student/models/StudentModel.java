@@ -5,11 +5,16 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentModel {
+public class StudentModel implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private Integer studentId;
 
     @NotNull(message = "Field student name is null!")

@@ -6,11 +6,17 @@ import jakarta.validation.constraints.Size;
 import learn.spring.student.constants.EntityMessage;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserModel {
+public class UserModel implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private Integer userId;
 
     @NotNull(message = EntityMessage.USERNAME_NULL_FIELD)

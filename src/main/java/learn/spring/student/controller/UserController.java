@@ -42,10 +42,10 @@ public class UserController {
         if (message != null) return new EntityResponse<>(EnumStatusResponse.WARNING, message, null);
         if (user.getPassword().equals(user.getConfirmPassword())) {
             if (Boolean.FALSE.equals(userServiceImpl.existUser(user.getUsername()))) {
+                UserModel newUser = new UserModel();
+                newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                newUser.setUsername(user.getUsername());
                 try {
-                    UserModel newUser = new UserModel();
-                    newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-                    newUser.setUsername(user.getUsername());
                     userServiceImpl.create(newUser);
                     return new  EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_SUCCESS, null);
                 } catch (Exception e) {

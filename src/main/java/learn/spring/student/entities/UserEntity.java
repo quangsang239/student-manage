@@ -16,7 +16,6 @@ import java.util.Collections;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-@RedisHash(value = "user")
 public class UserEntity implements UserDetails {
     @Id
     @org.springframework.data.annotation.Id
