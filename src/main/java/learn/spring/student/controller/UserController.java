@@ -26,12 +26,14 @@ public class UserController {
 
     @GetMapping(value = "/users")
     public EntityResponse<List<UserModel>> getAllUser() {
-        return userServiceImpl.findAll();
+        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
+                userServiceImpl.findAll());
     }
 
     @GetMapping(value = "/users/{userId}")
     public EntityResponse<UserModel> getUserById(@PathVariable("userId") Integer userId) {
-        return userServiceImpl.findById(userId);
+        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
+                userServiceImpl.findById(userId));
     }
 
     @PostMapping("/users")
@@ -44,7 +46,8 @@ public class UserController {
                     UserModel newUser = new UserModel();
                     newUser.setPassword(passwordEncoder.encode(user.getPassword()));
                     newUser.setUsername(user.getUsername());
-                    return userServiceImpl.create(newUser);
+                    userServiceImpl.create(newUser);
+                    return new  EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_SUCCESS, null);
                 } catch (Exception e) {
                     return new EntityResponse<>(EnumStatusResponse.ERROR, EntityMessage.SERVER_ERROR, null);
                 }

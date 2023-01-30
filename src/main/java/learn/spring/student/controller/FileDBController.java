@@ -25,7 +25,8 @@ public class FileDBController {
     public EntityResponse<FileDBEntity> createFile(@RequestParam("file") MultipartFile multipartFile) {
         if (!multipartFile.isEmpty()) {
             try {
-                return fileDBService.store(multipartFile);
+                return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_FILE_SUCCESS,
+                        fileDBService.store(multipartFile));
             } catch (Exception e) {
                 throw new CreateFileException(EntityMessage.CREATE_FILE_FAIL);
             }
@@ -36,7 +37,8 @@ public class FileDBController {
     @GetMapping(value = "/files/{id}")
     public EntityResponse<FileDBResponseModel> getFileById(@PathVariable("id") Integer id) {
         try {
-            return fileDBService.findById(id);
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
+                    fileDBService.findById(id));
         } catch (Exception e) {
             throw new CreateFileException(EntityMessage.NOT_FOUND);
         }
@@ -45,7 +47,8 @@ public class FileDBController {
     @GetMapping(value = "/files")
     public EntityResponse<List<FileDBResponseModel>> getAllFiles() {
         try {
-            return fileDBService.findAll();
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
+                    fileDBService.findAll());
         } catch (Exception e) {
             throw new CreateFileException(EntityMessage.NOT_FOUND);
         }

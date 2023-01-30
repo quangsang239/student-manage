@@ -1,16 +1,12 @@
 package learn.spring.student.services.impl;
 
-import learn.spring.student.common.EntityResponse;
 import learn.spring.student.constants.EntityMessage;
-import learn.spring.student.constants.EnumStatusResponse;
 import learn.spring.student.entities.FileDBEntity;
 import learn.spring.student.exception.CreateFileException;
 import learn.spring.student.models.FileDBResponseModel;
 import learn.spring.student.repositories.FileDBRepository;
 import learn.spring.student.services.FileDBService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,9 +24,9 @@ public class FileDBServiceImpl implements FileDBService {
     private final FileDBRepository fileDBRepository;
 
     @Override
-    public EntityResponse<FileDBEntity> store(MultipartFile multipartFile) {
+    public FileDBEntity store(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            return new EntityResponse<>(EnumStatusResponse.WARNING, EntityMessage.FILE_NULL, null);
+            throw new CreateFileException(EntityMessage.CREATE_FILE_FAIL);
         }
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         FileDBEntity file = new FileDBEntity();
@@ -41,8 +37,8 @@ public class FileDBServiceImpl implements FileDBService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_FILE_SUCCESS,
-                fileDBRepository.save(file));
+
+        return fileDBRepository.save(file);
     }
 
     @Override
@@ -56,39 +52,35 @@ public class FileDBServiceImpl implements FileDBService {
 
 
     @Override
-    public EntityResponse<List<FileDBResponseModel>> findAll() {
+    public List<FileDBResponseModel> findAll() {
         List<FileDBEntity> fileDBEntityList = fileDBRepository.findAll();
-        List<FileDBResponseModel> collect = fileDBEntityList.stream().map(dbFile -> {
+        return fileDBEntityList.stream().map(dbFile -> {
             String fileDownloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("api/files/download/").path(dbFile.getId().toString()).toUriString();
             return new FileDBResponseModel(dbFile.getName(), fileDownloadURL, dbFile.getType(),
                     (long) dbFile.getData().length);
         }).collect(Collectors.toList());
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS, collect);
     }
 
     @Override
-    public EntityResponse<FileDBResponseModel> findById(Integer id) {
+    public FileDBResponseModel findById(Integer id) {
         Optional<FileDBEntity> fileDBEntity = fileDBRepository.findById(id);
         if (fileDBEntity.isPresent()) {
             String fileDownloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("api/files/download/").path(fileDBEntity.get().getId().toString()).toUriString();
-            FileDBResponseModel fileDBResponseModel = new FileDBResponseModel(fileDBEntity.get().getName(),
+
+            return new FileDBResponseModel(fileDBEntity.get().getName(),
                     fileDownloadURL, fileDBEntity.get().getType(), (long) fileDBEntity.get().getData().length);
+        }else throw new CreateFileException(EntityMessage.NOT_FOUND);
+    }
 
-            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
-                    fileDBResponseModel);
-        }
+    @Override
+    public FileDBResponseModel create(FileDBResponseModel model) {
         return null;
     }
 
     @Override
-    public EntityResponse<FileDBResponseModel> create(FileDBResponseModel model) {
-        return null;
-    }
-
-    @Override
-    public EntityResponse<FileDBResponseModel> delete(Integer id) {
+    public FileDBResponseModel delete(Integer id) {
         return null;
     }
 }

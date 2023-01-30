@@ -1,17 +1,19 @@
 package learn.spring.student.services.impl;
 
 import jakarta.transaction.Transactional;
-import learn.spring.student.constants.EntityMessage;
-import learn.spring.student.common.EntityResponse;
-import learn.spring.student.constants.EnumStatusResponse;
 import learn.spring.student.config.JwtService;
+import learn.spring.student.constants.EntityMessage;
 import learn.spring.student.entities.UserEntity;
 import learn.spring.student.exception.NotFoundUserException;
+import learn.spring.student.exception.StudentException;
 import learn.spring.student.maps.impl.UserMapperImpl;
 import learn.spring.student.models.UserModel;
 import learn.spring.student.repositories.UserRepository;
 import learn.spring.student.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,35 +34,37 @@ public class UserServiceImpl implements UserService {
     private final UserMapperImpl userMapper;
 
     @Override
-    public EntityResponse<List<UserModel>> findAll() {
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
-                userRepository.findAll().stream().map(userMapper::entityMapToModel).collect(Collectors.toList()));
+    @Cacheable(value = "UserModel")
+    public List<UserModel> findAll() {
+        return userRepository.findAll().stream().map(userMapper::entityMapToModel).collect(Collectors.toList());
     }
 
     @Override
-    public EntityResponse<UserModel> findById(Integer id) {
+    @Cacheable(value = "UserModel", key = "#id")
+    public UserModel findById(Integer id) {
         Optional<UserEntity> user = this.userRepository.findById(id);
-        return user.map(userEntity -> new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS,
-                userMapper.entityMapToModel(userEntity))).orElse(null);
+        if (user.isPresent()) return userMapper.entityMapToModel(user.get());
+        else throw new NotFoundUserException(EntityMessage.NOT_FOUND);
     }
 
     @Override
     @Transactional
-    public EntityResponse<UserModel> create(UserModel user) {
-        if (existUser(user.getUsername())){
-            return new EntityResponse<>(EnumStatusResponse.WARNING,EntityMessage.EXIST, null);
+    @CachePut(value = "UserModel", key = "#user.userId")
+    public UserModel create(UserModel user) {
+        if (existUser(user.getUsername())) {
+            throw new StudentException(EntityMessage.EXIST);
         }
         userRepository.save(userMapper.modelMapToEntity(user));
-        return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_SUCCESS, null);
+        return user;
     }
 
     @Override
-    public EntityResponse<UserModel> delete(Integer id) {
-        if (findById(id)!= null){
+    @CacheEvict(value = "UserModel", key = "#id")
+    public UserModel delete(Integer id) {
+        if (findById(id) != null) {
             userRepository.deleteById(id);
-            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.DELETE_SUCCESS, null);
-        }
-        return new EntityResponse<>(EnumStatusResponse.WARNING, EntityMessage.DELETE_FAIL, null);
+            return findById(id);
+        } else throw new StudentException(EntityMessage.NOT_FOUND);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class UserServiceImpl implements UserService {
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return jwtService.generateToken(userEntity);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new NotFoundUserException(EntityMessage.NOT_FOUND_USER);
         }
 

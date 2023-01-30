@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import learn.spring.student.constants.EntityMessage;
 import learn.spring.student.common.EntityResponse;
 import learn.spring.student.constants.EnumStatusResponse;
+import learn.spring.student.exception.CreateFileException;
 import learn.spring.student.models.StudentModel;
 import learn.spring.student.services.impl.StudentServiceImpl;
 import learn.spring.student.utils.GetMessageError;
@@ -26,9 +27,10 @@ public class StudentController {
             return new EntityResponse<>(EnumStatusResponse.WARNING, message,null);
         }
         try {
-            return studentServiceImpl.create(student);
+            studentServiceImpl.create(student);
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.GET_DATA_SUCCESS, null);
         }catch (Exception exception) {
-            return new EntityResponse<>(EnumStatusResponse.ERROR, EntityMessage.SERVER_ERROR, null);
+            throw new CreateFileException(EntityMessage.SERVER_ERROR);
         }
     }
 
@@ -56,7 +58,8 @@ public class StudentController {
     @DeleteMapping(value = "/students/{id}")
     public  EntityResponse<StudentModel> deleteStudent(@PathVariable("id") Integer id){
         if (studentServiceImpl.findById(id)!= null){
-            return studentServiceImpl.delete(id);
+            return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.DELETE_SUCCESS,
+                    studentServiceImpl.delete(id));
         }else {
             return new EntityResponse<>(EnumStatusResponse.ERROR, EntityMessage.DELETE_FAIL, null);
         }

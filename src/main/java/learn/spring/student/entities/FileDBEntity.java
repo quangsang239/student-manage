@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "file_db")
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class FileDBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

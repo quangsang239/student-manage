@@ -25,4 +25,10 @@ public class CustomExceptionHandle {
         return new ExceptionResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(StudentException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionResponse handleStudentException(StudentException ex){
+        return new ExceptionResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
 }

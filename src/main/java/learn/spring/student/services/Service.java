@@ -5,11 +5,11 @@ import learn.spring.student.common.EntityResponse;
 import java.util.List;
 
 public interface Service<T> {
-    EntityResponse<List<T>> findAll();
+    List<T> findAll();
 
-    EntityResponse<T> findById(Integer id);
+    T findById(Integer id);
 
-    EntityResponse<T> create(T model);
+    T create(T model);
 
-    EntityResponse<T> delete(Integer id);
+    T delete(Integer id);
 }
