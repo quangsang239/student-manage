@@ -31,4 +31,10 @@ public class CustomExceptionHandle {
         return new ExceptionResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(FileUploadNotSupport.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public  ExceptionResponse handleFileUploadNotSupport(FileUploadNotSupport ex){
+        return new ExceptionResponse(HttpStatus.EXPECTATION_FAILED, ex.getMessage());
+    }
+
 }

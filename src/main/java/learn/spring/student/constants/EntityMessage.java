@@ -25,5 +25,6 @@ public class EntityMessage {
     public static final String FILE_NULL = "File Require Not Null!";
     public static final String CREATE_FILE_SUCCESS = "Create File Success!";
     public static final String CREATE_FILE_FAIL = "Create File Fail!";
-    public static final String ID_FIND_IS_NULL = "Id Find Model Is Null";
+    public static final String ID_FIND_IS_NULL = "Id Find Model Is Null!";
+    public static final String FILE_TYPE_NOT_SUPPORT = "File Type Is Not Support!";
 }

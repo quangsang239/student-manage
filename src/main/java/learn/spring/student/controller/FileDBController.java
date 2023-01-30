@@ -3,8 +3,10 @@ package learn.spring.student.controller;
 import learn.spring.student.common.EntityResponse;
 import learn.spring.student.constants.EntityMessage;
 import learn.spring.student.constants.EnumStatusResponse;
+import learn.spring.student.constants.FileAcceptUpload;
 import learn.spring.student.entities.FileDBEntity;
 import learn.spring.student.exception.CreateFileException;
+import learn.spring.student.exception.FileUploadNotSupport;
 import learn.spring.student.models.FileDBResponseModel;
 import learn.spring.student.services.impl.FileDBServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +25,17 @@ public class FileDBController {
 
     @PostMapping(value = "/files")
     public EntityResponse<FileDBEntity> createFile(@RequestParam("file") MultipartFile multipartFile) {
-        if (!multipartFile.isEmpty()) {
-            try {
-                return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_FILE_SUCCESS,
-                        fileDBService.store(multipartFile));
-            } catch (Exception e) {
-                throw new CreateFileException(EntityMessage.CREATE_FILE_FAIL);
-            }
+        String typeFile = multipartFile.getContentType();
+        if (!multipartFile.isEmpty() && typeFile != null) {
+            if (typeFile.matches(FileAcceptUpload.DOC) || typeFile.matches(FileAcceptUpload.EXCEL)
+            || typeFile.matches(FileAcceptUpload.PDF)){
+                try {
+                    return new EntityResponse<>(EnumStatusResponse.SUCCESS, EntityMessage.CREATE_FILE_SUCCESS,
+                            fileDBService.store(multipartFile));
+                } catch (Exception e) {
+                    throw new CreateFileException(EntityMessage.CREATE_FILE_FAIL);
+                }
+            }else throw new FileUploadNotSupport(EntityMessage.FILE_TYPE_NOT_SUPPORT);
         }
         return new EntityResponse<>(EnumStatusResponse.WARNING, EntityMessage.FILE_NULL, null);
     }
